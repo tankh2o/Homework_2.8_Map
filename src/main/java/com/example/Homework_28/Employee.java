@@ -5,20 +5,23 @@ import java.util.Objects;
 public class Employee {
     private String firstName;
     private String lastName;
+    private int department;
+    private double salaryEmployee;
 
-    private String num;
-
-    public static Employee createEmployee(String firstName, String lastName, String num) {
-        Employee employee = new Employee(firstName, lastName);
+    public static Employee createEmployee(String firstName, String lastName, int department, int salaryEmployee) {
+        Employee employee = new Employee(firstName, lastName, department, salaryEmployee);
         employee.firstName = firstName;
         employee.lastName = lastName;
-        employee.num = num;
+        employee.department = department;
+        employee.salaryEmployee = salaryEmployee;
         return employee;
     }
 
-    public Employee(String firstName, String lastName) {
+    public Employee(String firstName, String lastName, int department, int salaryEmployee) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.department = department;
+        this.salaryEmployee = salaryEmployee;
     }
 
     public String getFirstName() {
@@ -29,16 +32,20 @@ public class Employee {
         return lastName;
     }
 
-    public Employee(String num) {
-        this.num = num;
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
-    public String getNum() {
-        return num;
+    public int getDepartment() {
+        return department;
     }
 
-    public void setNum(String num) {
-        this.num = num;
+    public double getSalaryEmployee() {
+        return salaryEmployee;
+    }
+
+    public void setSalaryEmployee(double salaryEmployee) {
+        this.salaryEmployee = salaryEmployee;
     }
 
     @Override
@@ -56,9 +63,9 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Сотрудник: " +
-                "Фамилия - " + firstName + '\'' +
-                ", Имя - " + lastName;
+        return ". Ф.И.О. работника: " + this.firstName + " " + this.lastName
+                + ". Отдел: " + this.department
+                + ". Зарплата: " + this.salaryEmployee;
     }
 }
 

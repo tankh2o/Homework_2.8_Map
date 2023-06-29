@@ -1,13 +1,22 @@
 package com.example.Homework_28;
 
-import java.util.Map;
+import java.util.Collection;
 
 public interface EmployeeInterface {
-    Map<String, Employee> findOutNumberEmployees();
+    Collection<Employee> findOutNumberEmployees();
 
-    String findEmployees(String firstName, String lastName) throws EmployeeStorageIsFullException;
+    String addEmployee(String firstName, String lastName, int department, int salaryEmployee) throws EmployeeNotFoundException;
 
-    String addEmployee(String firstName, String lastName) throws EmployeeNotFoundException;
+    String removeEmployee(String firstName, String lastName, int department, int salaryEmployee);
 
-    String removeEmployee(String firstName, String lastName);
+    String findEmployee(String firstName, String lastName, int department, int salaryEmployee) throws EmployeeStorageIsFullException;
+
+    void sumSalaryInMonth();
+
+    void findMaxSalaryAmongEmployee();
+
+    void findMinSalaryAmongEmployee();
+    void findAverageValueSalaries();
+    void printFullNameAllEmployees();
+
 }

@@ -19,27 +19,33 @@ public class EmployeeController {
 
     @GetMapping(path = "/find/out")
     public Map<String, Employee> findOutNumberEmployees() {
-        return employeeInterface.findOutNumberEmployees();
+        return (Map<String, Employee>) employeeInterface.findOutNumberEmployees();
     }
 
     @GetMapping(path = "/add")
     public String addEmployee(
             @RequestParam(value = "firstName", required = false) String firstName,
-            @RequestParam(value = "lastName", required = false) String lastName) {
-        return employeeInterface.addEmployee(firstName, lastName);
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "department") int department,
+            @RequestParam(value = "salaryEmployee") double salaryEmployee) {
+        return employeeInterface.addEmployee(firstName, lastName, department, .salaryEmployee);
     }
 
     @GetMapping(path = "/remove")
     public String removeEmployee(
             @RequestParam(value = "firstName", required = false) String firstName,
-            @RequestParam(value = "lastName", required = false) String lastName) {
-        return employeeInterface.removeEmployee(firstName, lastName);
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "department") int department,
+            @RequestParam(value = "salaryEmployee") double salaryEmployee) {
+        return employeeInterface.removeEmployee(firstName, lastName, department, salaryEmployee);
     }
 
     @GetMapping(path = "/find")
     public String findEmployee(
             @RequestParam(value = "firstName", required = false) String firstName,
-            @RequestParam(value = "lastName", required = false) String lastName) {
-        return employeeInterface.findEmployees(firstName, lastName);
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "department") int department,
+            @RequestParam(value = "salaryEmployee") double salaryEmployee) {
+        return employeeInterface.findEmployee(firstName, lastName, department, salaryEmployee);
     }
 }

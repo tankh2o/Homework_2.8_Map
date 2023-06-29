@@ -2,6 +2,8 @@ package com.example.Homework_28;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,15 +14,36 @@ public class EmployeeService implements EmployeeInterface {
     public static final int MAX_SIZE = 5;
 
     @Override
-    public Map<String, Employee> findOutNumberEmployees() {
-        return employees;
+    public String addEmployee(String firstName, String lastName, int department, int salaryEmployee)
+            throws EmployeeNotFoundException {
+        Employee employee = new Employee(firstName, lastName, department, salaryEmployee);
+        if (employees.containsKey(employee.getFullName())) {
+            throw new EmployeeAlreadyAddedException("Данный сотрудник уже есть в базе данных.");
+        }
+        if (firstName == null || lastName == null) {
+            throw new IllegalArgumentException("Вы забыли прописать фамилию или имя сотрудника.");
+        }
+        if (employees.size() == MAX_SIZE) {
+            throw new EmployeeStorageIsFullException("Превышен лимит количества сотрудников в фирме.");
+        }
+        employees.put(employee.getFullName(), employee);
+        return "В базу данных добавлен новый сотрудник: " + employee.getFirstName() + " " + employee.getLastName();
     }
 
     @Override
-    public String findEmployees(String firstName, String lastName) throws EmployeeStorageIsFullException {
-        Employee employee = new Employee(firstName, lastName);
-        String employeeKey = getEmployeeKey(firstName, lastName);
-        if (employees.containsKey(employeeKey)) {
+    public String removeEmployee(String firstName, String lastName, int department, int salaryEmployee) {
+        Employee employee = new Employee(firstName, lastName, department, salaryEmployee);
+        if (!employees.containsKey(employee.getFullName())) {
+            throw new EmployeeNotFoundException("Такого сотрудника нет в базе данных.");
+        }
+        employees.remove(employee.getFullName());
+        return "Сотрудник " + firstName + " " + lastName + " удален из базы данных.";
+    }
+
+    @Override
+    public String findEmployee(String firstName, String lastName, int department, int salaryEmployee) throws EmployeeStorageIsFullException {
+        Employee employee = new Employee(firstName, lastName, department, salaryEmployee);
+        if (employees.containsKey(employee.getFullName())) {
             final String employeeDescription =
                     "Имя и фамилия: " + employee.getLastName()
                             + " " + employee.getFirstName();
@@ -30,34 +53,68 @@ public class EmployeeService implements EmployeeInterface {
     }
 
     @Override
-    public String addEmployee(String firstName, String lastName) throws EmployeeNotFoundException {
-        Employee employee = new Employee(firstName, lastName);
-        //if (employees.containsKey(employee.getFirstName() + employee.getLastName())) {
-        if (employees.containsKey(firstName + lastName)) {
-            throw new EmployeeAlreadyAddedException("Данный сотрудник уже есть в базе данных.");
+    public void sumSalaryInMonth() {
+        int sumSalary = 0;
+        for (Employee inMonth : employees) {
+            sumSalary += inMonth.getSalaryEmployee();
         }
-        if (firstName == null || lastName == null) {
-            throw new IllegalArgumentException("Вы забыли прописать фамилию или имя сотрудника.");
-        }
-        if (employees.size() == MAX_SIZE) {
-            throw new EmployeeStorageIsFullException("Превышен лимит количества сотрудников в фирме.");
-        }
-        employees.put(employee.getFirstName() + employee.getLastName(), new Employee(firstName, lastName));
-        return "В базу данных добавлен новый сотрудник: " + employee.getFirstName() + " " + employee.getLastName();
+        System.out.println("Сумма затрат на выплату зарплаты сотрудникам в месяц: " + sumSalary);
     }
 
     @Override
-    public String removeEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        String employeeKey = getEmployeeKey(firstName, lastName);
-        if (!employees.containsKey(employeeKey)) {
-            throw new EmployeeNotFoundException("Такого сотрудника нет в базе данных.");
+    public void findMaxSalaryAmongEmployee() {
+        double maxSalary = employees[0].getSalaryEmployee();
+        for (Employee max : employees) {
+            if (maxSalary < max.getSalaryEmployee()) {
+                maxSalary = max.getSalaryEmployee();
+            }
         }
-        employees.remove(employee);
-        return "Сотрудник " + firstName + " " + lastName + " удален из базы данных.";
+        System.out.println("Максимальная зарплата среди сотрудников: " + maxSalary);
     }
 
-    public String getEmployeeKey(String firstName, String lastName) {
-        return firstName + lastName;
+    @Override
+    public void findMinSalaryAmongEmployee() {
+        double minSalary = employees[0].getSalaryEmployee();
+        for (Employee min : employees) {
+            if (minSalary > min.getSalaryEmployee()) {
+                minSalary = min.getSalaryEmployee();
+            }
+        }
+        System.out.println("Минимальная зарплата среди сотрудников: " + minSalary);
     }
+
+    @Override
+    public void findAverageValueSalaries() {
+        int sumSalary = 0;
+        for (Employee value : employees.size()) {
+            sumSalary += value.getSalaryEmployee();
+        }
+        sumSalary = sumSalary / employees.size();
+        System.out.println("Среднее значение зарплат: " + sumSalary);
+    }
+
+    @Override
+    public Collection<Employee> findOutNumberEmployees() {
+        return Collections.unmodifiableCollection(employees.values());
+    }
+
+    @Override
+    public void printFullNameAllEmployees() {
+        String fullName = new String();
+        for (Employee employeeName : employees) {
+            fullName += employeeName.getFullName();
+        }
+        System.out.println("Список сотрудников:");
+        printFullName();
+    }
+    public static void printFullName() {
+        int n = 1;
+        while (n < employees.size()) {
+            for (int i = 0; i < employees.size(); i++) {
+                System.out.println(n + ". " + employees[i].getFullName());
+                n++;
+            }
+        }
+    }
+
 }
