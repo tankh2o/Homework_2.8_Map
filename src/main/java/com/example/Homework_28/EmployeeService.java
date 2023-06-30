@@ -2,24 +2,11 @@ package com.example.Homework_28;
 
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class EmployeeService implements EmployeeInterface {
-    /*1. Перенести проект с EmployeeBook на Map в качестве хранилища
-            сотрудников, реализовав методы добавления, удаления и поиска.
-
-    2. Продумать контракт для ключей, чтобы сотрудник с одним ФИО
-            существовал только в одном экземпляре, корректно добавлялся и удалялся.
-
-    3. Избавиться от циклов в методах по поиску сотрудника, заменив на методы Map.
-
-    4. Переработать все методы по работе с хранилищем на работу с методами Map.
-
-    Задание может быть выполнено по-разному. Главное, чтобы были выполнены критерии.
-            Если какой-то информации в задании не хватает, действуйте на свое усмотрение.*/
-    public static Map<String, Employee> employees = new HashMap<>(Map.of());
+    public static Map<String, Employee> employees = new HashMap<String, Employee>(Map.of());
 
     public static final int MAX_SIZE = 5;
 
@@ -29,23 +16,11 @@ public class EmployeeService implements EmployeeInterface {
     }
 
     @Override
-    public String findEmployees(String firstName, String lastName) throws EmployeeStorageIsFullException {
-        Employee employee = new Employee(firstName, lastName);
+    public Employee addEmployee(String firstName, String lastName, Integer departmentId, Integer salaryEmployee)
+            throws EmployeeNotFoundException {
+        Employee employee = new Employee(firstName, lastName, departmentId, salaryEmployee);
         String employeeKey = getEmployeeKey(firstName, lastName);
         if (employees.containsKey(employeeKey)) {
-            final String employeeDescription =
-                    "Имя и фамилия: " + employee.getLastName()
-                            + " " + employee.getFirstName();
-            return employeeDescription;
-        }
-        throw new EmployeeNotFoundException("Сотрудник не найден");
-    }
-
-    @Override
-    public String addEmployee(String firstName, String lastName) throws EmployeeNotFoundException {
-        Employee employee = new Employee(firstName, lastName);
-        //if (employees.containsKey(employee.getFirstName() + employee.getLastName())) {
-        if (employees.containsKey(firstName + lastName)) {
             throw new EmployeeAlreadyAddedException("Данный сотрудник уже есть в базе данных.");
         }
         if (firstName == null || lastName == null) {
@@ -54,22 +29,38 @@ public class EmployeeService implements EmployeeInterface {
         if (employees.size() == MAX_SIZE) {
             throw new EmployeeStorageIsFullException("Превышен лимит количества сотрудников в фирме.");
         }
-        employees.put(employee.getFirstName() + employee.getLastName(), new Employee(firstName, lastName));
-        return "В базу данных добавлен новый сотрудник: " + employee.getFirstName() + " " + employee.getLastName();
+        employees.put(employeeKey, employee);
+        /*return "В базу данных добавлен новый сотрудник: " + employee.getFirstName() + " "
+                + employee.getLastName() + " из отдела №" + employee.getDepartmentId()
+                + " c заработной платой " + employee.getSalaryEmployee() + ".";*/
+        return employees.get(employee);
+    }
+
+    private String getEmployeeKey(String firstName, String lastName) {
+        return firstName + lastName;
     }
 
     @Override
-    public String removeEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        String employeeKey = getEmployeeKey(firstName, lastName);
-        if (!employees.containsKey(employeeKey)) {
+    public String removeEmployee(String firstName, String lastName, Integer departmentId, Integer salaryEmployee) {
+        Employee employee = new Employee(firstName, lastName, departmentId, salaryEmployee);
+        if (!employees.containsKey(getEmployeeKey(firstName, lastName))) {
             throw new EmployeeNotFoundException("Такого сотрудника нет в базе данных.");
         }
-        employees.remove(employee);
+        employees.remove(getEmployeeKey(firstName, lastName));
         return "Сотрудник " + firstName + " " + lastName + " удален из базы данных.";
     }
 
-    public String getEmployeeKey(String firstName, String lastName) {
-        return firstName + lastName;
+    @Override
+    public Employee findEmployee(String firstName, String lastName, Integer department, Integer salaryEmployee) throws EmployeeStorageIsFullException {
+        if (!employees.containsKey(getEmployeeKey(firstName, lastName))) {
+            throw new EmployeeNotFoundException("Сотрудник не найден");
+            /*final String employeeDescription =
+                    "Имя и фамилия: " + employee.getLastName()
+                            + " " + employee.getFirstName()
+                            + ". Отдел: " + employee.getDepartmentId()
+                            + " Заработная плата = " + employee.getSalaryEmployee();
+            return employeeDescription;*/
+        }
+        return employees.get(getEmployeeKey(firstName, lastName));
     }
 }

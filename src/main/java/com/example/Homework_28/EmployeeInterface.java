@@ -5,9 +5,9 @@ import java.util.Map;
 public interface EmployeeInterface {
     Map<String, Employee> findOutNumberEmployees();
 
-    String findEmployees(String firstName, String lastName) throws EmployeeStorageIsFullException;
+    Employee addEmployee(String firstName, String lastName, Integer departmentId, Integer salaryEmployee) throws EmployeeNotFoundException;
 
-    String addEmployee(String firstName, String lastName) throws EmployeeNotFoundException;
+    String removeEmployee(String firstName, String lastName, Integer departmentId, Integer salaryEmployee);
 
-    String removeEmployee(String firstName, String lastName);
+    Employee findEmployee(String firstName, String lastName, Integer departmentId, Integer salaryEmployee) throws EmployeeStorageIsFullException;
 }
