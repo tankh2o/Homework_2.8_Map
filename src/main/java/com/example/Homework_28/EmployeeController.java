@@ -19,33 +19,34 @@ public class EmployeeController {
 
     @GetMapping(path = "/find/out")
     public Map<String, Employee> findOutNumberEmployees() {
-        return (Map<String, Employee>) employeeInterface.findOutNumberEmployees();
+        Map<String, Employee> employees = (Map<String, Employee>) employeeInterface.findOutNumberEmployees();
+        return employees;
     }
 
     @GetMapping(path = "/add")
-    public String addEmployee(
+    public Employee addEmployee(
             @RequestParam(value = "firstName", required = false) String firstName,
             @RequestParam(value = "lastName", required = false) String lastName,
-            @RequestParam(value = "department") int department,
-            @RequestParam(value = "salaryEmployee") double salaryEmployee) {
-        return employeeInterface.addEmployee(firstName, lastName, department, .salaryEmployee);
+            @RequestParam(value = "departmentId") Integer departmentId,
+            @RequestParam(value = "salaryEmployee") Integer salaryEmployee) {
+        return employeeInterface.addEmployee(firstName, lastName, departmentId, salaryEmployee);
     }
 
     @GetMapping(path = "/remove")
     public String removeEmployee(
             @RequestParam(value = "firstName", required = false) String firstName,
             @RequestParam(value = "lastName", required = false) String lastName,
-            @RequestParam(value = "department") int department,
-            @RequestParam(value = "salaryEmployee") double salaryEmployee) {
-        return employeeInterface.removeEmployee(firstName, lastName, department, salaryEmployee);
+            @RequestParam(value = "departmentId") Integer departmentId,
+            @RequestParam(value = "salaryEmployee") Integer salaryEmployee) {
+        return employeeInterface.removeEmployee(firstName, lastName, departmentId, salaryEmployee);
     }
 
     @GetMapping(path = "/find")
-    public String findEmployee(
+    public Employee findEmployee(
             @RequestParam(value = "firstName", required = false) String firstName,
             @RequestParam(value = "lastName", required = false) String lastName,
-            @RequestParam(value = "department") int department,
-            @RequestParam(value = "salaryEmployee") double salaryEmployee) {
-        return employeeInterface.findEmployee(firstName, lastName, department, salaryEmployee);
+            @RequestParam(value = "departmentId") Integer departmentId,
+            @RequestParam(value = "salaryEmployee") Integer salaryEmployee) {
+        return employeeInterface.findEmployee(firstName, lastName, departmentId, salaryEmployee);
     }
 }
